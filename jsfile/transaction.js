@@ -66,7 +66,7 @@ document.addEventListener("DOMContentLoaded", () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ type, amount, expenseType: "food", date }),
       })
-        .then((res) => res.text())
+        .then((res) => res.json())
         .then((data) => {
           console.log(data);
           if (data.message) {

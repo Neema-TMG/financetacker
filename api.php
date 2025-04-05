@@ -23,25 +23,19 @@ if ($method == 'POST') {
     $amount = $data['amount'];
     $date = $data['date'];
 
-    try{
-        $stmt = $conn->prepare("INSERT INTO transactions (auth_id, type, expenseType, amount, date) VALUES (66,"income","food",20000,NOW())");
-    // $stmt->bind_param("sssd", $userId, $type, $expenseType, $amount, $date);
+
+        $stmt = $conn->prepare("INSERT INTO transactions (auth_id, type, expenseType, amount, date) VALUES (?, ?, ?, ?, ?)");
+        $stmt->bind_param("issds", $userId, $type, $expenseType, $amount, $date);
     if($stmt->execute()){
         echo json_encode(["message" => "Transaction added successfully"]);
     } else {
         echo json_encode(["error" => "Failed to add transaction"]);
     }
     $stmt->close();
-    }
-    catch(Exception $Ex)
-    {
-        var_dump($Ex);
-
-
-    }
+    
     
 } elseif ($method == 'GET') {
-    $result = $conn->query("SELECT * FROM transactions WHERE auth_id = ? ORDER BY date DESC");
+    $stmt = $conn->prepare("SELECT * FROM transactions WHERE auth_id = ? ORDER BY date DESC");
     $stmt->bind_param("i", $userId);
     $stmt->execute();
     $result= $stmt->get_result();
